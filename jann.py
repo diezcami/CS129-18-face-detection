@@ -2,9 +2,13 @@ from mlp import MLP
 import csv
 
 classes = {
-	'A': 0,
-	'B': 1,
-	'C': 2
+	'TRUE': 1,
+	'FALSE': 0
+}
+
+classesReverse = {
+	'1' : 'TRUE',
+	'0' : 'FALSE'
 }
 
 def loadTraining(filename, brain):
@@ -29,6 +33,15 @@ def loadTraining(filename, brain):
 					if brain.overallNetError < idealError:
 						break
 
+def getLabel(data):
+	brain.feedForward(data)
+	output = brain.getOutputNeurons()
+	outputVals = [o.val for o in output]
+
+	for i,o in enumerate(outputVals):
+		if o == max(outputVals):
+			return classesReverse[i]
+
 def loadValidation(filename, brain):
 	with open(filename, 'rb') as csvfile:
 		reader = csv.reader(csvfile)
@@ -38,35 +51,26 @@ def loadValidation(filename, brain):
 		for row in reader:
 			data = [float(x) for x in row[:-1]]
 			label = row[-1]
+			annLabel = getLabel(data)
 
-			brain.feedForward(data)
-			output = brain.getOutputNeurons()
-			outputVals = [o.val for o in output]
-
-			for i,o in enumerate(outputVals):
-				if o==max(outputVals):
-					if label=='A' and i==0:
-						numCorrect = numCorrect + 1
-					if label=='B' and i==1:
-						numCorrect = numCorrect + 1
-					if label=='C' and i==2:
-						numCorrect = numCorrect + 1
+			if annLabel == label:
+				numCorrect = numCorrect + 1
 			numTotal = numTotal + 1
 
 		print "Correct:", numCorrect
 		print "Total: ", numTotal
 		print "Accuracy: ", float(numCorrect)/float(numTotal)*100.0, "%"
 
-def main():
+def ann():
 	# If new topology:
-	# topology = [3,4,4,3]
-	# brain = MLP(topology)
-	# loadTraining('train.csv', brain)
-	# brain.saveNetwork()
+	topology = [32,16,32,16,2]
+	brain = MLP(topology)
+	loadTraining('train.csv', brain)
+	brain.saveNetwork()
 
 	# If loading existing topology in mlp.net:
-	brain = MLP()
+	# brain = MLP()
 
-	loadValidation('test.csv', brain)
+	# loadValidation('test.csv', brain)
 
 if __name__ == '__main__': main()
