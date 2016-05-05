@@ -64,7 +64,7 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 		x,y,w,h = cv2.boundingRect(contours[i])
 		
 		# Arbitrary threshold height and width is 30, 30:
-		if h>30 and w>30: 
+		if h>50 and w>50: 
 			cv2.rectangle(image, (x, y), (x+w, y+h), (255,0,0), 2)
 			cropimg = orig[y:y+h, x:x+w]
 
@@ -79,7 +79,7 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 			# cv2.imshow('Cropped Image ' + str(i), cropimg)
 		
 	# cv2.imshow('Original Image', orig)
-	cv2.imshow('Annotated Image', image)
+	#cv2.imshow('Annotated Image', image)
 	# cv2.imshow('Contrast Image', imgray)
 	# cv2.imshow('Edge Image', edges)
 	# cv2.waitKey(0)
