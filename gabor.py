@@ -65,23 +65,31 @@ def load_images_from_folder (folder):
             images.append(img)
     return images
 
+def get_image_feature_vector(image, filters, positive=None):
+    response_matrices = process(image, filters)
+
+    local_energy_results = []
+    mean_amplitude_results = []
+
+    for matrix in response_matrices:
+        local_energy = get_local_energy(matrix)
+        mean_amplitude = get_mean_amplitude(matrix)
+        local_energy_results.append (local_energy)
+        mean_amplitude_results.append(mean_amplitude)
+
+    if positive is None:
+        feature_set = local_energy_results + mean_amplitude_results
+    else:
+        feature_set = local_energy_results + mean_amplitude_results + [positive]
+
+    return feature_set
+
 def get_all_image_feature_vectors(images, positive):
     filters = build_filters()
     feature_sets = []
     
-    for i, image in enumerate(images):
-        response_matrices = process(image, filters)
-
-        local_energy_results = []
-        mean_amplitude_results = []
-
-        for matrix in response_matrices:
-            local_energy = get_local_energy(matrix)
-            mean_amplitude = get_mean_amplitude(matrix)
-            local_energy_results.append (local_energy)
-            mean_amplitude_results.append(mean_amplitude)
-
-        feature_set = local_energy_results + mean_amplitude_results + [positive]
+    for image in images:
+        feature_set = get_image_feature_vector(image, filters, positive)
         feature_sets.append (feature_set)
 
     return feature_sets
