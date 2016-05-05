@@ -2,12 +2,12 @@ import numpy as np
 import cv2
 import os
  
-INPUT_DIR = 'matrix/'
+INPUT_DIR = 'input/'
 
 def build_filters():
     filters = []
     ksize = 31
-    for theta in np.arange(0, np.pi, np.pi / 16):
+    for theta in np.arange(0, np.pi, np.pi / 8):
         # cv2.getGaborKernel(ksize, sigma, theta, lambda, gamma, psi, ktype)
         # ksize: size of gabor kernell
         # sigma: standard dev of gaussian function
@@ -17,10 +17,11 @@ def build_filters():
         # psi: phase offset
         # ktype: type and range of values that each pixel in the gabor kernel can hold
         # 
-        # (1) I'm not sure how many scales and orientations are needed for the convolution process
+        # (1) I'm not sure what parameter needs to be adjusted for the scales convolution
         kern = cv2.getGaborKernel((ksize, ksize), 4.0, theta, 10.0, 0.5, 0, ktype=cv2.CV_32F)
         kern /= 1.5*kern.sum()
         filters.append(kern)
+    print len(filters)
     return filters
  
 def process(img, filters):
@@ -72,8 +73,10 @@ if __name__ == '__main__':
         res1 = process(image, filters)
         response_matrices = []
         # cv2.imshow('result', res1) #Testing purposes
+        
         # Insert code to get response matrices
-    
+        
+        """
         local_energy_results = []
         mean_amplitude_results = []
 
@@ -85,6 +88,7 @@ if __name__ == '__main__':
 
         feature_set = local_energy_results + mean_amplitude_results
         feature_sets.append (feature_set)
+        """
     
     cv2.waitKey(0)
     cv2.destroyAllWindows()
