@@ -65,7 +65,7 @@ For each layer:
 ```
 
 ## References ##
-Aside from the OpenCV docs, we referred/used the following:
+Aside from the OpenCV docs, we referred to/used the following:
 
 ### Gabor Tutorials ###
 - http://stackoverflow.com/questions/20608458/gabor-feature-extraction
@@ -76,3 +76,7 @@ Aside from the OpenCV docs, we referred/used the following:
 The training and test sets used were subsets of the following datasets:
 - Caltech Vision, Faces 1999: http://www.vision.caltech.edu/html-files/archive.html
 - University of Essex, faces95: http://cswww.essex.ac.uk/mv/allfaces/index.html
+
+### Others ###
+- Skin Thresholding: http://www.pyimagesearch.com/2014/08/18/skin-detection-step-step-example-using-python-opencv/
+- Automatic Canny Thresholds: http://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/

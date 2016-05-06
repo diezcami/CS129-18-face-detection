@@ -9,10 +9,10 @@ def load_training(filename, brain):
 			label = row[-1]
 
 			target = [0]
-			target[0] = (float(label))==1
+			target[0] = int(float(label))
 
 			idealError = 0.3
-			epoch = 10
+			epoch = 5
 
 			for i in range(epoch):
 				currError = brain.overallNetError
@@ -30,11 +30,7 @@ def load_training(filename, brain):
 def get_ann_label(data, brain):
 	brain.feedForward(data)
 	output = brain.getOutputNeurons()
-
-	if output[0].val > 0:
-		return 1
-	else:
-		return 0
+	return 1 if output[0].val > 0 else 0
 
 def load_validation(filename, brain):
 	with open(filename, 'rb') as csvfile:
