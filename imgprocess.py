@@ -4,7 +4,7 @@ import os
 
 from gabor import get_image_feature_vector, build_filters
 from nb import get_nb_label
-from jann import get_ann_label
+from jann import get_ann_label, get_brain
 
 INPUT_DIR = 'data/input/'
 OUTPUT_DIR = 'data/output/'        
@@ -61,23 +61,26 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 
 	filters = build_filters()
 
+	brain = get_brain()
+
 	# Draw contours
 	for i in range(len(contours)):
 		# image = cv2.drawContours(img, contours, i, (0,255,0), 1)
 		x,y,w,h = cv2.boundingRect(contours[i])
+		cv2.rectangle(img, (x, y), (x+w, y+h), (100,100,100,50), 2)
 		
-
 		# Arbitrary threshold height and width is 30, 30
 		if h>30 and w>30: 
+			cropimg = orig[y:y+h, x:x+w]
 			if train:
-				cropimg = orig[y:y+h, x:x+w]
 				output_name = OUTPUT_DIR + filename[:-4] + str(i) + '.jpg'
 				cv2.imwrite(output_name, cropimg)
 			else:
 				feature_set = get_image_feature_vector(cropimg, filters)
-				ann_label = get_ann_label(feature_set)
+				ann_label = get_ann_label(feature_set, brain)
 				# nb_label = get_nb_label(feature_set)
 
+				print "Found a face" if ann_label == 1 else "This is not a face"
 				if ann_label == 1:
 					cv2.rectangle(img, (x, y), (x+w, y+h), (255,0,0), 2)
 				# else:
@@ -90,7 +93,7 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 	cv2.imshow('Annotated Image', img)
 	# cv2.imshow('Contrast Image', imgray)
 	# cv2.imshow('Edge Image', edges)
-	cv2.waitKey(0)
+	# cv2.waitKey(0)
 
 for filename in os.listdir(INPUT_DIR):
 	get_objects_from_file(filename, True)

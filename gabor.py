@@ -3,7 +3,8 @@ import cv2
 import os
 import csv
  
-INPUT_DIR = 'input/'
+POSITIVE_DIR = 'data/training_data/positives'
+NEGATIVE_DIR = 'data/training_data/negatives'
 
 def build_filters():
     filters = []
@@ -98,18 +99,18 @@ def get_all_image_feature_vectors(images, positive):
 # Generates a CSV file containing the feature vectors
 def create_csv_output():
     # Load images
-    positive_images = load_images_from_folder (INPUT_DIR)
-    # negative_images = load_images_from_folder (NEGATIVE_DIR)
+    positive_images = load_images_from_folder (POSITIVE_DIR)
+    negative_images = load_images_from_folder (NEGATIVE_DIR)
 
     # Get feature vectors of images
     positive_feature_vectors = get_all_image_feature_vectors (positive_images, True)
-    # negative_feature_vectors = get_all_image_feature_vectors (negative_images, False)
+    negative_feature_vectors = get_all_image_feature_vectors (negative_images, False)
 
     # Input feature vectors into a CSV file
     with open ("data/training_data/train.csv", "wb") as f:
         writer = csv.writer(f)
         writer.writerows(positive_feature_vectors)
-        # writer.writerows(negative_feature_vectors)
+        writer.writerows(negative_feature_vectors)
 
 if __name__ == '__main__':
     create_csv_output()

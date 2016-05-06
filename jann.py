@@ -9,9 +9,9 @@ def load_training(filename, brain):
 			label = row[-1]
 
 			target = [0, 0]
-			target[label] = 1
+			target[int(label)] = 1
 
-			idealError = 0.5
+			idealError = 0.3
 			epoch = 3
 
 			for i in range(epoch):
@@ -23,7 +23,7 @@ def load_training(filename, brain):
 					if brain.overallNetError < idealError:
 						break
 
-def get_ann_label(data):
+def get_ann_label(data, brain):
 	brain.feedForward(data)
 	output = brain.getOutputNeurons()
 	outputVals = [o.val for o in output]
@@ -51,16 +51,18 @@ def load_validation(filename, brain):
 		print "Total: ", numTotal
 		print "Accuracy: ", float(numCorrect)/float(numTotal)*100.0, "%"
 
-def ann():
-	# If new topology:
+# Create new MLP
+def create_brain():
 	topology = [32,16,32,16,2]
 	brain = MLP(topology)
-	load_training('train.csv', brain)
+	load_training('data/training_data/train.csv', brain)
 	brain.saveNetwork()
+	
+# Load existing topology from mlp.net
+def get_brain():
+	brain = MLP()
+	return brain
 
-	# If loading existing topology in mlp.net:
-	# brain = MLP()
+# load_validation('test.csv', brain)
 
-	# load_validation('test.csv', brain)
-
-if __name__ == '__main__': main()
+if __name__ == '__main__': create_brain()
