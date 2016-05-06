@@ -7,7 +7,7 @@ from nb import get_nb_label
 from jann import get_ann_label, get_brain
 
 INPUT_DIR = 'data/input/'
-OUTPUT_DIR = 'data/output/'        
+OUTPUT_DIR = 'data/output/'
 
 def auto_canny(image, sigma=0.33):
 	# Adjust threshold values of canny based on median values of the image
@@ -24,7 +24,7 @@ def get_objects_from_file(filename, train=False):
 	orig = cv2.imread(INPUT_DIR + filename)
 	get_objects_from_img(orig, filename, train)
 
-def get_objects_from_img(orig, filename=".jpg", train=False):
+def get_objects_from_img(orig, filename=".jpg", train=False, webcam=False):
 	img = orig.copy()
 
 	# Convert to gray, equalize to improve contrast
@@ -63,12 +63,13 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 
 	brain = get_brain()
 
-	# Draw contours
 	for i in range(len(contours)):
+		# Draw contours
 		# image = cv2.drawContours(img, contours, i, (0,255,0), 1)
+
+		# Identify bounding boxes
 		x,y,w,h = cv2.boundingRect(contours[i])
-		cv2.rectangle(img, (x, y), (x+w, y+h), (100,100,100,50), 2)
-		
+
 		# Arbitrary threshold height and width is 30, 30
 		if h>30 and w>30: 
 			cropimg = orig[y:y+h, x:x+w]
@@ -80,20 +81,28 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 				ann_label = get_ann_label(feature_set, brain)
 				# nb_label = get_nb_label(feature_set)
 
-				print "Found a face" if ann_label == 1 else "This is not a face"
+				# print "Found a face" if ann_label == 1 else "This is not a face"
 				if ann_label == 1:
 					cv2.rectangle(img, (x, y), (x+w, y+h), (255,0,0), 2)
-				# else:
-					# cv2.rectangle(img, (x, y), (x+w, y+h), (100,100,100,50), 2)
+				else:
+					cv2.rectangle(img, (x, y), (x+w, y+h), (100,100,100,50), 2)
 			
 			# To show individual images in a window:
 			# cv2.imshow('Cropped Image ' + str(i), cropimg)
-		
-	# cv2.imshow('Original Image', orig)
-	cv2.imshow('Annotated Image', img)
-	# cv2.imshow('Contrast Image', imgray)
-	# cv2.imshow('Edge Image', edges)
+	
+	# For manual processing
+	if not train and not webcam:
+		annot_name = OUTPUT_DIR + filename
+		cv2.imwrite(annot_name, img)
+
+	# For webcam
+	if webcam:
+		cv2.imshow('Annotated Image', img)
+
+	# If not using with webcam and you want to display until exit
+	# cv2.imshow('Annotated Image', img)
 	# cv2.waitKey(0)
 
-for filename in os.listdir(INPUT_DIR):
-	get_objects_from_file(filename, True)
+if __name__ == '__main__':
+	for filename in os.listdir(INPUT_DIR):
+		get_objects_from_file(filename, False)

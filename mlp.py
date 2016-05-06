@@ -200,8 +200,3 @@ class MLP:
 
 	def getOutputNeurons(self):
 		return self.mLayers[-1].mNeurons
-
-
-
-
-
