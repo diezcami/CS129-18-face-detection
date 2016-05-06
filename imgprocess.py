@@ -3,6 +3,8 @@ import numpy as np
 import os
 
 from gabor import get_image_feature_vector, build_filters
+from nb import get_nb_label
+from jann import get_ann_label
 
 INPUT_DIR = 'data/input/'
 OUTPUT_DIR = 'data/output/'        
@@ -23,10 +25,11 @@ def get_objects_from_file(filename, train=False):
 	get_objects_from_img(orig, filename, train)
 
 def get_objects_from_img(orig, filename=".jpg", train=False):
-	# Convert to gray, equalize to improve contrast
 	img = orig.copy()
-	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	imgray = cv2.equalizeHist(imgray)
+
+	# Convert to gray, equalize to improve contrast
+	# imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	# imgray = cv2.equalizeHist(imgray)
 
 	# Boundaries of "skin" HSV intensities
 	lower = np.array([0, 3, 0], dtype = "uint8")
@@ -53,36 +56,41 @@ def get_objects_from_img(orig, filename=".jpg", train=False):
 	edges = auto_canny(skinMask)
 
 	# Find contours
-	ret,thresh = cv2.threshold(edges,100,255,0)
-	image, contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+	ret,thresh = cv2.threshold(edges, 100, 255, 0)
+	image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 	filters = build_filters()
 
 	# Draw contours
 	for i in range(len(contours)):
-		image = cv2.drawContours(img, contours, i, (0,255,0), 1)
+		# image = cv2.drawContours(img, contours, i, (0,255,0), 1)
 		x,y,w,h = cv2.boundingRect(contours[i])
 		
-		# Arbitrary threshold height and width is 30, 30:
-		if h>50 and w>50: 
-			cv2.rectangle(image, (x, y), (x+w, y+h), (255,0,0), 2)
-			cropimg = orig[y:y+h, x:x+w]
 
+		# Arbitrary threshold height and width is 30, 30
+		if h>30 and w>30: 
 			if train:
+				cropimg = orig[y:y+h, x:x+w]
 				output_name = OUTPUT_DIR + filename[:-4] + str(i) + '.jpg'
 				cv2.imwrite(output_name, cropimg)
 			else:
 				feature_set = get_image_feature_vector(cropimg, filters)
-				# Check via ANN whether given this feature set is a face or not
+				ann_label = get_ann_label(feature_set)
+				# nb_label = get_nb_label(feature_set)
+
+				if ann_label == 1:
+					cv2.rectangle(img, (x, y), (x+w, y+h), (255,0,0), 2)
+				# else:
+					# cv2.rectangle(img, (x, y), (x+w, y+h), (100,100,100,50), 2)
 			
 			# To show individual images in a window:
 			# cv2.imshow('Cropped Image ' + str(i), cropimg)
 		
 	# cv2.imshow('Original Image', orig)
-	#cv2.imshow('Annotated Image', image)
+	cv2.imshow('Annotated Image', img)
 	# cv2.imshow('Contrast Image', imgray)
 	# cv2.imshow('Edge Image', edges)
-	# cv2.waitKey(0)
+	cv2.waitKey(0)
 
 for filename in os.listdir(INPUT_DIR):
 	get_objects_from_file(filename, True)

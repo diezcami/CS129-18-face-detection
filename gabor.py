@@ -10,7 +10,7 @@ def build_filters():
     ksize = 31
 
     # cv2.getGaborKernel(ksize, sigma, theta, lambda, gamma, psi, ktype)
-    # ksize: size of gabor kernell
+    # ksize: size of gabor kernel
     # sigma: standard dev of gaussian function
     # theta: orientation/angle (between 0-pi)
     # lambda:  wavelength of the sinusoidal factor
@@ -80,7 +80,8 @@ def get_image_feature_vector(image, filters, positive=None):
     if positive is None:
         feature_set = local_energy_results + mean_amplitude_results
     else:
-        feature_set = local_energy_results + mean_amplitude_results + [positive]
+        pos_num = 1 if positive else 0
+        feature_set = local_energy_results + mean_amplitude_results + [pos_num]
 
     return feature_set
 
