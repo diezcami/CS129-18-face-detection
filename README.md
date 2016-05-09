@@ -16,6 +16,9 @@ Put the files you'd like to be part of the training/test sets in the `data/train
 ### Modifying the Artificial Neural Network ###
 The ANN's topology is specified in `mlp.py`'s create_brain function. Running `python jann.py` will either create a new multilayer perceptron (saving the configuration to `mlp.net`) or load the existing one, depending on which is not commented out. To test the ANN's performance on the test set, uncomment the call to load_validation and run the program.
 
+### Testing ###
+To test the ANN classification on a pre-existing `data/test.csv`, call `python jann.py`. To test the Naive Bayes classification on a pre-existing `data/test.csv` with its predefined positive and negative means and variances in the main directory, call `python nb.py`.
+
 ## Directory Structure ##
 ```
 ├── data/

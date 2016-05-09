@@ -37,6 +37,10 @@ def load_validation(filename, brain):
 		reader = csv.reader(csvfile)
 		numCorrect = 0
 		numTotal = 0
+		numFalsePositive = 0
+		numFalseNegative = 0
+		numTruePositive = 0
+		numTrueNegative = 0
 
 		for row in reader:
 			data = [float(x) for x in row[:-1]]
@@ -45,11 +49,30 @@ def load_validation(filename, brain):
 
 			if annLabel == label:
 				numCorrect = numCorrect + 1
+			if annLabel == 1 and label == 0:
+				numFalsePositive += 1
+			if annLabel == 1 and label == 1:
+				numTruePositive += 1
+			if annLabel == 0 and label == 0:
+				numTrueNegative += 1
+			if annLabel == 0 and label == 1:
+				numFalseNegative += 1
 			numTotal = numTotal + 1
 
-		print "Correct:", numCorrect
-		print "Total: ", numTotal
+		print "ANN Results"
+		print "Total Labels Correct:", numCorrect
+		print "Total Labels Evaluated: ", numTotal
 		print "Accuracy: ", float(numCorrect)/float(numTotal)*100.0, "%"
+
+		print "Raw True Positive: ", numTruePositive
+		print "Raw True Negative: ", numTrueNegative
+		print "Raw False Positive: ", numFalsePositive
+		print "Raw False Negative: ", numFalseNegative
+
+		print "True Positive Rate: ", float(numTruePositive)/(numTruePositive+numFalseNegative)
+		print "True Negative Rate: ", float(numTrueNegative)/(numFalsePositive+numTrueNegative)
+		print "False Positive Rate: ", float(numFalsePositive)/(numFalsePositive+numTrueNegative)
+		print "False Negative Rate: ", float(numFalseNegative)/(numTruePositive+numFalseNegative)
 
 # Create new MLP
 def create_brain():
