@@ -8,6 +8,8 @@ NEGATIVE_TRAIN_DIR = 'data/train_images/negatives'
 POSITIVE_TEST_DIR = 'data/test_images/positives'
 NEGATIVE_TEST_DIR = 'data/test_images/negatives'
 
+EPS = 0.00000000000000001
+
 def build_filters():
     filters = []
 
@@ -15,9 +17,9 @@ def build_filters():
     ksize = 31
 
     # For different orientations
-    for theta in np.arange(0, np.pi, np.pi / 4):
+    for theta in np.arange(0, np.pi, np.pi/4):
         # And different wavelengths of the sinusoidal factor
-        for lamb in np.arange(0, np.pi, np.pi / 4):
+        for lamb in np.arange(np.pi/4, np.pi, np.pi/4):
             # Get a filter
             kern = cv2.getGaborKernel((ksize, ksize), 4.0, theta, lamb, 0.5, 0, ktype=cv2.CV_32F)
             kern /= 1.5*kern.sum()
@@ -49,8 +51,9 @@ def get_local_energy (matrix):
             local_energy = local_energy + val
 
     # Divide by the highest possible value, which is 255^2 * (100 x 100)
-    # to normalize values from 0 to 1
-    return local_energy / 650250000
+    # to normalize values from 0 to 1, and replace 0s with EPS value to work with NB
+    local_energy = local_energy / 650250000
+    return EPS if local_energy == 0 else local_energy
 
 # Given a response matrix, compute for the mean amplitude
 # Mean Amplitude = sum of absolute values of each matrix value from a response matrix
@@ -63,8 +66,9 @@ def get_mean_amplitude (matrix):
             mean_amp = mean_amp + val
 
     # Divide by the highest possible value, which is 255 * (100 x 100)
-    # to normalize values from 0 to 1
-    return mean_amp / 2550000
+    # to normalize values from 0 to 1, and replace 0s with EPS value to work with NB
+    mean_amp = mean_amp / 2550000
+    return EPS if mean_amp == 0 else mean_amp
 
 # Return a list of images from the given directory
 def load_images_from_folder (folder):

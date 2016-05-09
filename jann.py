@@ -76,7 +76,7 @@ def load_validation(filename, brain):
 
 # Create new MLP
 def create_brain():
-	topology = [32,64,16,8,1]
+	topology = [24,48,24,12,1]
 	brain = MLP(topology)
 	brain = load_training('data/train.csv', brain)
 	brain.saveNetwork()
@@ -90,10 +90,10 @@ def get_brain():
 
 if __name__ == '__main__': 
 	# If you want to test on a new brain:
-	brain = create_brain()
+	# brain = create_brain()
 
 	# If you want to test on the existing brain:
-	# brain = get_brain()
+	brain = get_brain()
 
 	# Run the tests
 	load_validation('data/test.csv', brain)
