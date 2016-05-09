@@ -1,9 +1,7 @@
-# Some constant declarations
-POSITIVE_PROBABILITY = 0.398809524
-NEGATIVE_PROBABILITY = 0.601190476
-
 # Actual NB algorithm. Returns 1 if the image is a face and 0 otherwise.
 def get_nb_label(feature_vector):
+	POSITIVE_PROBABILITY = 0.5
+	NEGATIVE_PROBABILITY = 0.5
 	positive_mean = process_training_data('positive_mean')
 	negative_mean = process_training_data('negative_mean')
 
