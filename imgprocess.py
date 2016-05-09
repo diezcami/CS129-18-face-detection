@@ -7,8 +7,8 @@ from nb import get_nb_label
 from jann import get_ann_label, get_brain
 from nb import process_training_data, get_nb_label
 
-INPUT_DIR = 'data/test_images/positives' #changed this for specific input folder
-OUTPUT_DIR = 'data/output/ANN/positives' #changed this for specific output folder
+INPUT_DIR = 'data/input/'
+OUTPUT_DIR = 'data/output/'
 
 def auto_canny(image, sigma=0.33):
 	# Adjust threshold values of canny based on median values of the image

@@ -61,18 +61,18 @@ def load_validation(filename, brain):
 
 		print "ANN Results"
 		print "Total Labels Correct:", numCorrect
-		print "Total Labels Evaluated: ", numTotal
-		print "Accuracy: ", float(numCorrect)/float(numTotal)*100.0, "%"
+		print "Total Labels Evaluated:", numTotal
+		print "Accuracy:", float(numCorrect)/float(numTotal)*100.0, "%"
 
-		print "Raw True Positive: ", numTruePositive
-		print "Raw True Negative: ", numTrueNegative
-		print "Raw False Positive: ", numFalsePositive
-		print "Raw False Negative: ", numFalseNegative
+		print "Raw True Positive:", numTruePositive
+		print "Raw True Negative:", numTrueNegative
+		print "Raw False Positive:", numFalsePositive
+		print "Raw False Negative:", numFalseNegative
 
-		print "True Positive Rate: ", float(numTruePositive)/(numTruePositive+numFalseNegative)
-		print "True Negative Rate: ", float(numTrueNegative)/(numFalsePositive+numTrueNegative)
-		print "False Positive Rate: ", float(numFalsePositive)/(numFalsePositive+numTrueNegative)
-		print "False Negative Rate: ", float(numFalseNegative)/(numTruePositive+numFalseNegative)
+		print "True Positive Rate:", float(numTruePositive)/(numTruePositive+numFalseNegative)
+		print "True Negative Rate:", float(numTrueNegative)/(numFalsePositive+numTrueNegative)
+		print "False Positive Rate:", float(numFalsePositive)/(numFalsePositive+numTrueNegative)
+		print "False Negative Rate:", float(numFalseNegative)/(numTruePositive+numFalseNegative)
 
 # Create new MLP
 def create_brain():
