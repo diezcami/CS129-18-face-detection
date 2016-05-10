@@ -1,7 +1,5 @@
-# CS 129.18 Project
-A face detection system from webcam input that utilizes skin thresholding and canny edge detection to find candidate face locations, and classifies them based on an artificial neural network trained on face datasets.
-
-*Important Note*: Though mentioned here in the readme (e.g. in the directory structure), the Naive Bayes portions of the system are not yet complete.
+# CS 129.18 Final Project: Face Detection
+A face detection system from webcam input that utilizes skin thresholding and canny edge detection to find candidate face locations, and classifies them based on an artificial neural network trained on face datasets. Aside from the ANN, the user can also opt to use the Naive Bayes algorithm for evaluating results.
 
 ## Instructions ##
 ### Using the Main Program ###
